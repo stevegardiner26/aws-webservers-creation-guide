@@ -20,6 +20,7 @@ First Log into the Amazon Console and Navigate to the Ec2 tab
 ### Connecting via SSH
 
 ### Setting Up Web Servers
+https://www.linode.com/docs/web-servers/lamp/install-lamp-stack-on-ubuntu-18-04/
 
 ### Assigning Elastic IP
 
@@ -35,5 +36,7 @@ First Log into the Amazon Console and Navigate to the Ec2 tab
 ## Other Useful Tips
 
 ### How to add a new website to the apache server
+https://www.linode.com/docs/web-servers/lamp/install-lamp-stack-on-ubuntu-18-04/
 
 ### How to setup an email server for a website
+https://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-using-smtp-php.html
