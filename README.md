@@ -130,6 +130,8 @@ https://www.linode.com/docs/web-servers/lamp/install-lamp-stack-on-ubuntu-18-04/
 https://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-using-smtp-php.html
 -Talk about SESSION?? and linking a form
 -Talk about Scrolling to the new page
+-Talk about sandbox mode only using verified emails 
+-Explain the PHP
 
 ### How to Setup a Git Deploy Webhook
 This allows you to be able to remotely pull the changes into your ec2 instance without having to log in. You can do it from any cloned git repository.
