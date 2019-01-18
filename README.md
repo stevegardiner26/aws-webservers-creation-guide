@@ -123,9 +123,19 @@ Give your domain some time to update and sync itself, and then it should work on
 However I have experienced after several minutes it updates. If you do not see any updates you may have to clear your cookies and cache and try again. That may solve the issue.
 
 ### Using Route 53
+Navigate to Route 53 through the Amazon Web Services Console.
 
+1. Register a domain through Route 53.
+1. Navigate to "Hosted Zones" on the left side navigation menu. 
+1. If you registered the domain properly there should be a hosted zone already created if not create one.
+1. Click on the hosted zone for your domain and create a new "Record Set"
+
+Leave the Name Blank, make sure the type is "A" and put your elastic-ip you connected to your Ec2 instance in the value section. Then create it. It may take a few minutes to update but then you should be able to navigate to your site from the domain name over `HTTP`. 
+
+*You may have to clear you cache/cookies if you were visiting the site before you linked it with the domain.*
 
 ## Verifying Domain over HTTPS
+//TODO Im still trying to figure this out=
 https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-18-04
 
 
