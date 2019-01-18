@@ -90,6 +90,88 @@ Now you should be able to log into the instance with
 ### Setting Up Web Servers
 Now to set up the web server you need to be logged into the instance. We are going to be installing a LAMP Stack Server.
 
+Make sure your ubuntu version is updated by running:
+    
+    $ sudo apt update && sudo apt upgrade
+
+#### Installing Packages for LAMP Server
+Install Apache 2.4 from Ubuntu
+
+    $ sudo apt install apache2
+
+Install the `mysql-server` package:
+
+    $ sudo apt install mysql-server
+
+Install Php with apache and mysql support:
+
+    $ sudo apt install php7.2 libapache2-mod-php7.2 php-mysql
+    
+Optionally, install additional cURL, JSON, and CGI support:
+
+    $ sudo apt install php-curl php-json php-cgi
+    
+#### Setting Up Apache
+Now we are going to configure apache to run the server how we want it.
+First lets configure the first apache config file, make sure you are in the root directory by executing `$ cd ~`. We are going to edit with vim by using:
+
+    $ sudo vim /etc/apache2/apache2.conf
+    
+Make sure these values are set within the file, then save and exit:
+
+    KeepAlive On
+    MaxKeepAliveRequests 50
+    KeepAliveTimeout 5
+    
+Now we want to restart apache via: 
+
+    sudo systemctl restart apache2
+
+#### Setting Up a WebServer/VirtualHost
+For all of these steps make sure you replace `example.com` with your domain.
+Make sure you are in the root directory still and copy the default `.conf` file and then we are going to edit the `example.com.conf`.
+
+    $ sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/example.com.conf
+    $ sudo vim /etc/apache2/sites-available/example.com.conf
+
+Make sure all these values in the file are the same as what I display below. Your file may not have certain lines so you will have to add them in. Then save and exit the file by pressing <kbd>ESC</kbd> and then typing `:wq!` and pressing <kbd>Enter</kbd>.
+
+    <Directory /var/www/html/example.com/public_html>
+        Require all granted
+    </Directory>
+    <VirtualHost *:80>
+        ServerName example.com
+        ServerAlias www.example.com
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/html/example.com/public_html
+
+        ErrorLog /var/www/html/example.com/logs/error.log
+        CustomLog /var/www/html/example.com/logs/access.log combined
+    </VirtualHost>
+
+Now we must create the directories we just referenced in that file by executing:
+
+    $ sudo mkdir -p /var/www/html/example.com/{public_html,logs}
+
+*Make sure that you do not have a space bewteen `{public_html,` and `logs}`.*
+
+Enable your site via apache, and disable the `default.conf` to limit security risks and the reload apache2:
+
+    $ sudo a2ensite example.com
+    $ sudo a2dissite 000-default.conf
+    $ sudo systemctl reload apache2
+   
+Now virtual hosting your site is enabled. 
+
+#### Setting Up MySQL (If you are not planning on using a database with your site then skip this step)
+
+
+#### Setting Up Php
+
+#### Setting Up a Test Page
+name it servertest.php
+
+#### Inserting a Git Repo to the WebServer
 //TODO STILL remember to include git pull into public_html
 
 ### Assigning Elastic IP
@@ -102,7 +184,7 @@ Now we are going to assign an Elastic Ip to an Instance which is essential to ro
 1. Select this Ip in your list, and click on the "Actions" dropdown and click "Associate Address".
 1. Select the instance and private ip there should only be one option if this is the only instance you created.
 
-That's it! Your Ec2 instance now has an ip binded to it. If you want to test if it is working go to `http://elastic-ip` and there should be an apache directory or webpage displaying. Read on to find out how to use this ip to link a domain.
+That's it! Your Ec2 instance now has an ip binded to it. If you want to test if it is working go to `http://elastic-ip/servertest.php` and there should be the test webpage displaying that we set up in an earlier step. Read on to find out how to use this ip to link a domain.
 
 ## Pushing a Domain to the Ec2 Instance
 
@@ -134,13 +216,58 @@ Leave the Name Blank, make sure the type is "A" and put your elastic-ip you conn
 
 *You may have to clear you cache/cookies if you were visiting the site before you linked it with the domain.*
 
-## Verifying Domain over HTTPS
+## Verifying Domain over HTTPS/SSL Cert
 //TODO Im still trying to figure this out=
 https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-18-04
 
 
 ## How to add a new website to the apache server
-https://www.linode.com/docs/web-servers/lamp/install-lamp-stack-on-ubuntu-18-04/
+For all of these steps make sure you replace `example.com` with your domain.
+Make sure you are in the root directory still and copy the default `.conf` file and then we are going to edit the `example.com.conf`.
+
+    $ sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/example.com.conf
+    $ sudo vim /etc/apache2/sites-available/example.com.conf
+
+Make sure all these values in the file are the same as what I display below. Your file may not have certain lines so you will have to add them in. Then save and exit the file by pressing <kbd>ESC</kbd> and then typing `:wq!` and pressing <kbd>Enter</kbd>.
+
+    <Directory /var/www/html/example.com/public_html>
+        Require all granted
+    </Directory>
+    <VirtualHost *:80>
+        ServerName example.com
+        ServerAlias www.example.com
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/html/example.com/public_html
+
+        ErrorLog /var/www/html/example.com/logs/error.log
+        CustomLog /var/www/html/example.com/logs/access.log combined
+    </VirtualHost>
+    
+Now we must create the directories we just referenced in that file by executing:
+
+    $ sudo mkdir -p /var/www/html/example.com/{public_html,logs}
+
+*Make sure that you do not have a space bewteen `{public_html,` and `logs}`.*
+
+**Enabling Sites**
+Use this command to enable your site:
+
+    $ sudo a2ensite example.com
+
+**Disabling Sites**
+Only use this command if you want to disable your site:
+
+    $sudo a2dissite example.com
+    
+Now reload apache:
+
+    $ sudo systemctl reload apache2
+
+Now navigate to `/var/www/html/example.com` and execute this to place your repo within the site
+
+    $ sudo git clone [git-repo-clone-link] public_html
+    
+Now connect the domain via Pushing a Domain to Ec2 Instance, and Enabling SSL Cert, and then you are all set.
 
 ## How to setup an email server for a website
 https://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-using-smtp-php.html
@@ -148,9 +275,12 @@ https://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-using-smtp-php.html
 -Talk about Scrolling to the new page
 -Talk about sandbox mode only using verified emails 
 -Explain the PHP
+//moving the var file
 
 ## How to Setup a Git Deploy Webhook
 This allows you to be able to remotely pull the changes into your ec2 instance without having to log in. You can do it from any cloned git repository.
 
 ## Resources
+
+**Setting Up a Lamp Stack on Ubuntu**
 https://www.linode.com/docs/web-servers/lamp/install-lamp-stack-on-ubuntu-18-04/
