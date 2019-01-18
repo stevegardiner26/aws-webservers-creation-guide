@@ -31,7 +31,7 @@ https://www.linode.com/docs/web-servers/lamp/install-lamp-stack-on-ubuntu-18-04/
 ### Using Google Domains
 
 ## Verifying Domain over HTTPS
-
+https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-18-04
 
 ## Other Useful Tips
 
