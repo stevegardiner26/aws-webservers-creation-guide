@@ -1,5 +1,5 @@
 # aws-webservers-creation-guide
-A creation guide to running a web server on AWS ```[In this tutorial we use Ubuntu EC2 and an apache web server]```es 
+A creation guide to running a web server on AWS ```In this tutorial we use Ubuntu EC2 and an apache web server``` 
 Here's a quick look of what I explain
 * Creation of Ec2 Instance
 * Creation of LAMP Stack WebServer in Instance
@@ -12,7 +12,7 @@ Here's a quick look of what I explain
 The first step on our journey here is creating an aws account. So head over to https://aws.amazon.com/ and do that.
 Which in itself is very self explanatory, however you must make sure you:
   * *Veryfiy your Email*
-  * *Verify your Address via Fax of a (Credit Card Bill, Utilities, Phone Bill etc [Anything with your address and name on it])*
+  * *Verify your Address via Fax of a (Credit Card Bill, Utilities, Phone Bill etc Anything with your address and name on it)*
   
 If you do not do these two things within three days your account will be locked. And if you wait 90 days there will be no option to reopen you aws account to use the services/console.
 
