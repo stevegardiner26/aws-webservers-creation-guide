@@ -1,5 +1,12 @@
 # aws-webservers-creation-guide
-A creation guide to running a web server on AWS ```[In this tutorial we use Ubuntu EC2 and an apache web server]```
+A creation guide to running a web server on AWS ```[In this tutorial we use Ubuntu EC2 and an apache web server]```es 
+Here's a quick look of what I explain
+* Creation of Ec2 Instance
+* Creation of LAMP Stack WebServer in Instance
+* Linking Domains to Websites on WebServer (Route 53 & Google Domains)
+* Sending Emails using Php via Amazon SES
+* SSL Verification for Domains
+* Setting up a Git Deploy Webhook
 
 ## Creation of AWS Account
 The first step on our journey here is creating an aws account. So head over to https://aws.amazon.com/ and do that.
@@ -121,19 +128,18 @@ However I have experienced after several minutes it updates. If you do not see a
 ## Verifying Domain over HTTPS
 https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-18-04
 
-## Other Useful Tips
 
-### How to add a new website to the apache server
+## How to add a new website to the apache server
 https://www.linode.com/docs/web-servers/lamp/install-lamp-stack-on-ubuntu-18-04/
 
-### How to setup an email server for a website
+## How to setup an email server for a website
 https://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-using-smtp-php.html
 -Talk about SESSION?? and linking a form
 -Talk about Scrolling to the new page
 -Talk about sandbox mode only using verified emails 
 -Explain the PHP
 
-### How to Setup a Git Deploy Webhook
+## How to Setup a Git Deploy Webhook
 This allows you to be able to remotely pull the changes into your ec2 instance without having to log in. You can do it from any cloned git repository.
 
 ## Resources
