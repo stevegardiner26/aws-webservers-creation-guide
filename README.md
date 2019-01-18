@@ -9,7 +9,7 @@ Which in itself is very self explanatory, however you must make sure you:
   
 If you do not do these two things within three days your account will be locked. And if you wait 90 days there will be no option to reopen you aws account to use the services/console.
 
-## Ec2 Instance
+## Creating an Ec2 Instance
 This is how we are going to store our webserver on, and in this tutorial we are going to create an Ubuntu version of Ec2.
 
 ### Creating the Instance
@@ -56,6 +56,7 @@ We are going to connect over a standalone ssh client. I am currently running thi
 1. Now to start up an ssh connection to your instance type:
 
     `$ ssh -i "instance-name.pem" ubuntu@ec2-#-##-###-###.compute-1.amazonaws.com`
+
 This is using the file, and your instance's public DNS which is different from mine and should be found easily in the connect button.
 
 Now you are in the ubuntu virtual instance!
@@ -64,26 +65,58 @@ If you simply want to exit the instance just type: `$ logout`
 ##### Optional SSH Verification:
 If you want to set up SSH verification so you do not need to reference the `.pem` file everytime you log in this is how you do that.
 
-1. In your iterm type: `$ cat ~/.ssh/id_rsa.pub | pbcopy`
+1. In your iterm type: 
+
+    `$ cat ~/.ssh/id_rsa.pub | pbcopy`
 1. Now log back into the instance using the `.pem` file this time.
-1. When you are in your Ec2 instance use: `$ nano ~/.ssh/authorized_keys`
+1. When you are in your Ec2 instance use: 
+    
+    `$ nano ~/.ssh/authorized_keys`
+    
 1. Paste in your ssh key, and save.
 
 Now you should be able to log into the instance with
 
-    `$ ssh ubuntu@ec2-#-##-###-###.compute-1.amazonaws.com`
+    $ ssh ubuntu@ec2-#-##-###-###.compute-1.amazonaws.com
 
 
 ### Setting Up Web Servers
+Now to set up the web server you need to be logged into the instance. We are going to be installing a LAMP Stack Server.
 
+//TODO STILL remember to include git pull into public_html
 
 ### Assigning Elastic IP
+Now we are going to assign an Elastic Ip to an Instance which is essential to route a domain or several domains to your instance.
+
+*Be aware that amazon charges you for elastic ips that are not connected to any instance. So as long as you have connected ips you shouldn't be charged*
+
+1. Go to the Ec2 Dashboard and go to the left side and scroll down untill you see the link that reads `Elastic IPs`.
+1. Click on the "Allocate New Address" button and allocate from the Amazon pool and you should get an ip.
+1. Select this Ip in your list, and click on the "Actions" dropdown and click "Associate Address".
+1. Select the instance and private ip there should only be one option if this is the only instance you created.
+
+That's it! Your Ec2 instance now has an ip binded to it. If you want to test if it is working go to `http://elastic-ip` and there should be an apache directory or webpage displaying. Read on to find out how to use this ip to link a domain.
 
 ## Pushing a Domain to the Ec2 Instance
 
+### Using Google Domains
+If you have a domain registered go to the manage tab. If you do not have one registered, register it and then go to the manage tab. 
+
+1. Make sure the domain isn't already forwarding to another site.
+1. Navigate to the DNS section of the manager.
+1. Scroll down to "Custom Resource Records" and enter two records:
+
+This is so we can support `domain-name.com` and `www.domain-name.com`
+
+      @   | A     | 1h | elastic-ip
+      www | CNAME | 1h | domain-name.com
+
+Give your domain some time to update and sync itself, and then it should work on `http`. Many sources say it takes max 48 hrs to update the domain. 
+
+However I have experienced after several minutes it updates. If you do not see any updates you may have to clear your cookies and cache and try again. That may solve the issue.
+
 ### Using Route 53
 
-### Using Google Domains
 
 ## Verifying Domain over HTTPS
 https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-18-04
