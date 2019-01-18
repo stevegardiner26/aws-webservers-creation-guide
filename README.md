@@ -164,15 +164,79 @@ Enable your site via apache, and disable the `default.conf` to limit security ri
 Now virtual hosting your site is enabled. 
 
 #### Setting Up MySQL (If you are not planning on using a database with your site then skip this step)
+Log into the mysql console and create a database:
 
+    $ sudo mysql -u root
+    CREATE DATABASE webdata;
+    GRANT ALL ON webdata.* TO 'webuser' IDENTIFIED BY 'password';
+    quit
+    
+Use this command secure installation to install it. You can skip the password stage.
+
+    $ sudo mysql_secure_installation
+    
+Enter **Y** for all the following prompts:
+
+* Remove anonymous users?
+* Disallow root login remotely?
+* Remove test database and access to it?
+* Reload privilege tables now?
 
 #### Setting Up Php
+To configure php properly use this command, and make sure you are in the root directory:
+
+    $ sudo vim /etc/php/7.2/apache2/php.ini
+    
+Make sure these following lines are entered within the file.    
+
+    error_reporting = E_COMPILE_ERROR | E_RECOVERABLE_ERROR | E_ERROR | E_CORE_ERROR
+    max_input_time = 30
+    error_log = /var/log/php/error.log
+    
+Create this log directory for php, give ownership to apache and then restart apache:
+
+    $ sudo mkdir /var/log/php
+    $ sudo chown www-data /var/log/php
+    $ sudo systemctl restart apache2
 
 #### Setting Up a Test Page
-name it servertest.php
+If you want to test if the server and website is up you will need a test page to navigate to after assigning the instance an elastic ip. You can remove the file after testing.
 
+Navigate to `/var/www/html/example.com/public_html` and:
+
+    $ touch servertest.php
+    $ sudo vim servertest.php
+    
+Paste this into the `servertest.php`:
+
+    <html>
+      <head>
+        <title>PHP Test</title>
+      </head>
+      <body>
+        <?php echo '<p>Hello World</p>';
+
+        // In the variables section below, replace user and password with your own MySQL credentials as created on your server
+        $servername = "localhost";
+        $username = "webuser";
+        $password = "password";
+
+        // Create MySQL connection
+        $conn = mysqli_connect($servername, $username, $password);
+
+        // Check connection - if it fails, output will include the error message
+        if (!$conn) {
+          die('<p>Connection failed: <p>' . mysqli_connect_error());
+        }
+        echo '<p>Connected successfully</p>';
+        ?>
+      </body>
+    </html>
+    
 #### Inserting a Git Repo to the WebServer
-//TODO STILL remember to include git pull into public_html
+If you want to put a repository in the webserver then enter this command from the root directory:
+
+    $ sudo git pull [git-repo-clone-link] /var/www/html/example.com/public_html
 
 ### Assigning Elastic IP
 Now we are going to assign an Elastic Ip to an Instance which is essential to route a domain or several domains to your instance.
