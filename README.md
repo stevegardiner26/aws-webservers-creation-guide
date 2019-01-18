@@ -1,4 +1,4 @@
-# awswebservers-creation-guide
+# aws-webservers-creation-guide
 A creation guide to running a web server on AWS [In this tutorial we use Ubuntu EC2 and an apache web server]
 
 ## Creation of AWS Account
