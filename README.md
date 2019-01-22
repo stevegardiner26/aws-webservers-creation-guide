@@ -333,16 +333,24 @@ Now navigate to `/var/www/html/example.com` and execute this to place your repo 
     
 Now connect the domain via Pushing a Domain to Ec2 Instance, and Enabling SSL Cert, and then you are all set.
 
-## How to setup an email server for a website
+## How to setup a Free AWS Email Server for a Website and Hook it up to a Form
+*This tutorial is using an Ec2 instance as described before.*
+
+### Setting Up the Service on AWS
+First you want to log into your console and search for "Simple Email Service" and navigate to that page. By Default you will be in sandbox mode and will have to verify an email address to forward emails to it.
+
+Navigate to "Email Addresses" on the left hand side and click on the blue button that says `Verify a New Email Address`. Type the email you want the form data to be sent to.
+
+Go to that email's inbox and click on the link to verify your email with aws.
+
+Navigate to "SMTP Settings" on the left hand side and create a new set of SMTP Credentials.
+
+Follow this link to do the rest:
 https://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-using-smtp-php.html
--Talk about SESSION?? and linking a form
--Talk about Scrolling to the new page
--Talk about sandbox mode only using verified emails 
--Explain the PHP
-//moving the var file
 
 ## How to Setup a Git Deploy Webhook
 This allows you to be able to remotely pull the changes into your ec2 instance without having to log in. You can do it from any cloned git repository.
+I'm not sure how to do this yet.
 
 ## Resources
 
