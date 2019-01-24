@@ -343,10 +343,144 @@ Navigate to "Email Addresses" on the left hand side and click on the blue button
 
 Go to that email's inbox and click on the link to verify your email with aws.
 
-Navigate to "SMTP Settings" on the left hand side and create a new set of SMTP Credentials.
+Navigate to "SMTP Settings" on the left hand side and create a new set of SMTP Credentials and save them we will need them for later.
 
-Follow this link to do the rest:
-https://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-using-smtp-php.html
+### Setting up PHP Mailer
+Php should already be installed if not make sure you install it.
+
+Get Composer:
+Now we want to install composer https://getcomposer.org/download.
+
+After composer is installed you can now install the PHP Mailer library
+
+    $ composer require phpmailer/phpmailer
+
+After that is installed we now need to hook this up to a DOM so users can interact with it.
+
+### Hooking a DOM Form via PHP into the email
+First we want to create a php file in our `public_html` directory to handle the emailing. We will name this file `form-to-email.php`.
+
+In our `index.php` file or the `html` file with the form this is something that the form should look like.
+
+    <form action="form-to-email.php" name="myemailform" method="POST">
+        <div class="form-group">
+            <label for="">Name: </label>
+            <input class="form-control" name="name" type="text" placeholder="Your Name">
+        </div>
+        <div class="form-group">
+            <label for="">Email:</label>
+            <input class="form-control" name="email" type="email" placeholder="example@example.com" required>
+        </div>
+        <div class="form-group">
+            <textarea name="message" id="" cols="30" rows="9" class="form-control" placeholder="Message..." required> . </textarea>
+        </div>
+        <button type="submit" style="margin-top: 20px; display: block;" class="mx-auto btn-success btn">Connect with Steve</button>
+    </form>
+
+Now the contents of the form and what it entails is totally customizable and optional. However the most important things here that you want to keep in mind is that:
+
+* The `action` attribute on the `<form>` is the name/path of the php email file we just created, because this is where it is going to send the data.
+* The `method` attribute on the `<form>` is `POST` you could also use `GET` but I choose to use `POST`.
+* Make sure each `<input>` has a `name` attribute because we will use that later.
+* Make sure your form has a `button` of type `submit` because this is what will trigger the sending of the form data to the php file.
+
+Now go into your `form-to-email.php` and put this inside the file:
+
+    <?php
+    
+    $name = $_POST['name'];
+    $visitor_email = $_POST['email'];
+    $message = $_POST['message'];
+ 
+
+What we are doing here is creating variables ex: `$name` and setting their values to the `$_POST['name']` which is referencing the `name` attribute placed on each of the html `input` fields.
+
+Paste this into the file underneath the declared variables the comments tell you what you need to replace:
+*Anything Amazon SES SMTP Related is your Credentials we created earlier*
+
+    // If necessary, modify the path in the require statement below to refer to the 
+    // location of your Composer autoload.php file.
+    require 'vendor/autoload.php';
+
+    use PHPMailer\PHPMailer\PHPMailer;
+
+    // Instantiate a new PHPMailer 
+    $mail = new PHPMailer;
+
+    // Tell PHPMailer to use SMTP
+    $mail->isSMTP();
+
+    // Replace sender@example.com with your "From" address. 
+    // This address must be verified with Amazon SES.
+    $mail->setFrom('sender@example.com', 'Sender Name');
+
+    // Replace recipient@example.com with a "To" address. If your account 
+    // is still in the sandbox, this address must be verified.
+    // Also note that you can include several addAddress() lines to send
+    // email to multiple recipients.
+    $mail->addAddress('recipient@example.com', 'Recipient Name');
+
+    // Replace smtp_username with your Amazon SES SMTP user name.
+    $mail->Username = 'smtp_username';
+
+    // Replace smtp_password with your Amazon SES SMTP password.
+    $mail->Password = 'smtp_password';
+    
+    // Specify a configuration set. If you do not want to use a configuration
+    // set, comment or remove the next line.
+    $mail->addCustomHeader('X-SES-CONFIGURATION-SET', 'ConfigSet');
+ 
+    // If you're using Amazon SES in a region other than US West (Oregon), 
+    // replace email-smtp.us-west-2.amazonaws.com with the Amazon SES SMTP  
+    // endpoint in the appropriate region.
+    $mail->Host = 'email-smtp.us-west-2.amazonaws.com';
+
+    // The subject line of the email
+    $mail->Subject = 'Amazon SES test (SMTP interface accessed using PHP)';
+
+    // The HTML-formatted body of the email
+    $mail->Body = '<h1>Email Test</h1>
+    <p>This email was sent through the 
+    <a href="https://aws.amazon.com/ses">Amazon SES</a> SMTP
+    interface using the <a href="https://github.com/PHPMailer/PHPMailer">
+    PHPMailer</a> class.</p>';
+
+    // Tells PHPMailer to use SMTP authentication
+    $mail->SMTPAuth = true;
+
+    // Enable TLS encryption over port 587
+    $mail->SMTPSecure = 'tls';
+    $mail->Port = 587;
+
+    // Tells PHPMailer to send HTML-formatted email
+    $mail->isHTML(true);
+
+    // The alternative email body; this is only displayed when a recipient
+    // opens the email in a non-HTML email client. The \r\n represents a 
+    // line break.
+    $mail->AltBody = "Email Test\r\nThis email was sent through the 
+    Amazon SES SMTP interface using the PHPMailer class.";
+   
+    if(!$mail->send()) {
+    echo "Email not sent. " , $mail->ErrorInfo , PHP_EOL;
+    } else {
+    echo "Email sent!" , PHP_EOL;
+    }  
+    
+    ?>
+
+The best way to do this in my opinion is to copy the entire `html` file that contains the form and replace the form with the confirmation/error message in the DOM. This looks a lot more professional, than just a white screen with text. Also you can put an `onload="document.getElementsByClassName('contact-container')[0].scrollIntoView({ behavior: 'smooth', block: 'center' });"` attribute on the `<body>` tag and the document will scroll to the error or success message on loading.
+
+
+    if(!$mail->send()) {
+    echo "Email not sent. " , $mail->ErrorInfo , PHP_EOL;
+    } else {
+    echo "Email sent!" , PHP_EOL;
+    }  
+
+This code here is where you can customize what is displayed after the form is submitted just include it within `echo`.
+
+*An alternate way to do this might be changing a `$_SESSION['Variable']` on the main html page to conditionally show the form or message. I have not figured out how to do this yet it is just an idea.*
 
 ## How to Setup a Git Deploy Webhook
 This allows you to be able to remotely pull the changes into your ec2 instance without having to log in. You can do it from any cloned git repository.
@@ -355,4 +489,10 @@ I'm not sure how to do this yet.
 ## Resources
 
 **Setting Up a Lamp Stack on Ubuntu**
+
 https://www.linode.com/docs/web-servers/lamp/install-lamp-stack-on-ubuntu-18-04/
+
+**Setting Up and Amazon Simple Email Service**
+
+https://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-using-smtp-php.html
+
