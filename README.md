@@ -496,3 +496,8 @@ https://www.linode.com/docs/web-servers/lamp/install-lamp-stack-on-ubuntu-18-04/
 
 https://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-using-smtp-php.html
 
+**Setting Up SSL Verification for your Site**
+
+https://www.tecmint.com/install-free-lets-encrypt-ssl-certificate-for-apache-on-debian-and-ubuntu/
+
+
