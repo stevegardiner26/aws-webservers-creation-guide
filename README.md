@@ -281,9 +281,25 @@ Leave the Name Blank, make sure the type is "A" and put your elastic-ip you conn
 *You may have to clear you cache/cookies if you were visiting the site before you linked it with the domain.*
 
 ## Verifying Domain over HTTPS/SSL Cert
-//TODO Im still trying to figure this out=
-https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-18-04
+*For this I use a free service called [Lets Encrypt](https://letsencrypt.org)*
 
+Run these commands to install Let's Encrypt
+
+    $ cd /usr/local
+    $ sudo git clone https://github.com/letsencrypt/letsencrypt
+
+Now this is used to assign a SSL per domain you have setup.
+
+    $ cd /usr/local/letsencrypt
+    $ sudo ./letsencrypt-auto --apache -d domain-name.com
+    
+The last line must be run for every domain and subdomain so for the `www.` version of that site you also have to run this:
+
+    $ sudo ./letsencrypt-auto --apache -d www.domain-name.com
+
+Now when it prompts you, enter an email so it can notify you for renewal and other important info and then the next prompt you can select whether you want anyone entering the site via `HTTP` to be redirected to the `HTTPS` version.
+
+Your SSL Certificate is now valid for 90 days after the 90 days you just have to run the `-d` command again to get a new Cert. If you want to automate this you can follow the link in the **Reasources** tab at the bottom of this documentation where the site will show you how to do this.
 
 ## How to add a new website to the apache server
 For all of these steps make sure you replace `example.com` with your domain.
@@ -349,7 +365,7 @@ Navigate to "SMTP Settings" on the left hand side and create a new set of SMTP C
 Php should already be installed if not make sure you install it.
 
 Get Composer:
-Now we want to install composer https://getcomposer.org/download.
+Now we want to install [Composer](https://getcomposer.org/download).
 
 After composer is installed you can now install the PHP Mailer library
 
