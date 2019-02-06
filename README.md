@@ -516,6 +516,7 @@ Now use vim to edit the bash script and put this code inside it
     echo "Deploy Successful!"
     
 `#!/bin/bash` is important because this declares the file as a bash script
+
 `site` variable can be set to whatever url website you want to deploy so when executed it will pull to that site.
 
 Now just save the file and to run it type this in the console:
