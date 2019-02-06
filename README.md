@@ -6,7 +6,7 @@ Here's a quick look of what I explain
 * Linking Domains to Websites on WebServer (Route 53 & Google Domains)
 * Sending Emails using Php via Amazon SES
 * SSL Verification for Domains
-* Setting up a Git Deploy Webhook
+* Setting up a Git Deploy from Remote
 
 ## Creation of AWS Account
 The first step on our journey here is creating an aws account. So head over to https://aws.amazon.com/ and do that.
@@ -498,11 +498,34 @@ This code here is where you can customize what is displayed after the form is su
 
 *An alternate way to do this might be changing a `$_SESSION['Variable']` on the main html page to conditionally show the form or message. I have not figured out how to do this yet it is just an idea.*
 
-## How to Setup a Git Deploy Webhook
-This allows you to be able to remotely pull the changes into your ec2 instance without having to log in. You can do it from any cloned git repository.
-I'm not sure how to do this yet.
+## How to Setup a Git Deploy From Remote
+This allows you to be able to remotely pull the changes into your ec2 instance without having to log in. You can do it from any cloned git repository or anywhere in your terminal directory for that matter.
+We are going to do this via a bash script so first create the script I called mine deploy.
+
+    $ touch deploy
+    
+Now use vim to edit the bash script and put this code inside it
+
+    #!/bin/bash
+    site="stevegardiner.org"
+    SERVER="AWS Ec2"
+    echo "Starting Deploy to Server: $SERVER...."
+    echo "Webserver deploying:  $site"
+    cd ~/Dev
+    ssh -i "WebServers.pem" ubuntu@ec2-*-**-***-***.compute-1.amazonaws.com "cd /var/www/html/${site}/public_html; git pull   origin master; logout"
+    echo "Deploy Successful!"
+    
+`#!/bin/bash` is important because this declares the file as a bash script
+`site` variable can be set to whatever url website you want to deploy so when executed it will pull to that site.
+
+Now just save the file and to run it type this in the console:
+
+    $ ~/deploy
+   
+And if you want to change the site you are deploying to just change the site variable and that's it!
 
 ## Resources
+Thank you for reading my tutorial I hope it helped in any capacity!
 
 **Setting Up a Lamp Stack on Ubuntu**
 
