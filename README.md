@@ -11,7 +11,7 @@ Here's a quick look of what I explain
 ## Creation of AWS Account
 The first step on our journey here is creating an aws account. So head over to https://aws.amazon.com/ and do that.
 Which in itself is very self explanatory, however you must make sure you:
-  * *Veryfiy your Email*
+  * *Verify your Email*
   * *Verify your Address via Fax of a (Credit Card, Utilities, Phone Bill etc. anything with your address and name on it)*
   
 If you do not do these two things within three days your account will be locked. And if you wait 90 days there will be no option to reopen you aws account to use the services/console.
